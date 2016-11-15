@@ -1,0 +1,2 @@
+# Scyther-Code-for-NFC-Security-Protocol-Verification
+We designed Security Protocol for NFC Enabled Mobile Devices Used in Financial Applications which resists against various potential attacks launched against authentication and secrecy of exchanged data. It provides local and remote mutual authentication, confidentiality, integrity and non-repudiation. We verified its design using Scyther Tool (Formal Verification). 
