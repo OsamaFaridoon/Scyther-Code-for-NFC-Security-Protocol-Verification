@@ -1,0 +1,72 @@
+usertype Certificate, TimeStamp, ReaderID, CardID, Data,
+SessionKeY,PINCode;
+protocol NFC(R,C) 
+{ 
+role R
+	{ 
+   	  fresh RID: ReaderID;
+var  CID: CardID;
+fresh Rn: Nonce; 
+var Cn: Nonce;  
+fresh Rt: TimeStamp;
+var Ct: TimeStamp;             
+fresh Rd: Data;
+var Cd: Data;
+hashfunction H; 
+fresh  CertR: Certificate;  
+var CertC:  Certificate;
+fresh skey:SessionKey; 
+var P:PINCode;  
+			 
+		send_1(R,C,   CertR); 
+recv_2(C,R,   CertC); 
+send_3(R,C,   Rn, Rt, RID );
+recv_4(C,R,   Cn, Ct, CID, {Rn, Rt, RID}sk(C));
+send_5(R,C,   {Cn, Ct, CID}sk(R));   
+send_6(R,C,   {{skey}sk(R)}pk(C))       
+recv_7(C,R,   {H(P)}skey);
+send_8(R,C,   {Rd}skey);
+recv_9(C,R,   {Cd}skey); 
+
+ 	  claim_R1(R,Secret,skey); 
+claim_R2(R,Secret,P); 
+claim_R3(R,Secret,Cd);
+claim_R4(R,Niagree); 
+claim_R5(R,Weakagree); 
+claim_R6(R,Alive); 
+claim_R7(R,Nisynch);
+}
+
+role C
+  { 
+      var RID: ReaderID;
+      fresh CID: CardID;
+var Rn: Nonce; 
+fresh Cn: Nonce;  
+var Rt: TimeStamp; 
+fresh Ct: TimeStamp;
+var Rd: Data;
+fresh Cd: Data;
+hashfunction H; 
+var  CertR: Certificate; 
+fresh CertC:  Certificate;
+fresh skey:SessionKey; 
+fresh P:PINCode;  
+			 
+	recv_1(R,C,   CertR); 
+send_2(C,R,   CertC); 
+recv_3(R,C,   Rn, Rt, RID );
+send_4(C,R,   Cn, Ct, CID, {Rn, Rt, RID}sk(C));
+recv_5(R,C,   {Cn, Ct, CID}sk(R)); 
+recv_6(R,C,   {{skey}sk(R)}pk(C));            
+send_7(C,R,   {H(P)}skey);
+recv_8(R,C,   {Rd}skey);
+send_9(C,R,   {Cd}skey);
+                          
+  claim_C1(C, Secret, skey); 
+claim_C2(C,Secret, P); 
+claim_C3(C, Niagree); 
+claim_C4(C, Weakagree); 
+claim_C5(C, Alive); 
+} 
+}
